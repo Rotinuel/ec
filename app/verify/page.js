@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 
-export default function VerifyPage() {
+function VerifyPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const token = searchParams.get('token')
@@ -32,4 +32,13 @@ export default function VerifyPage() {
       <h1 className="text-xl font-semibold">Verifying your email...</h1>
     </div>
   )
+}
+
+
+export default function VerifyPage(){
+    return (
+        <Suspense fallback={null}>
+            <VerifyPageContent />
+        </Suspense>
+    )
 }
