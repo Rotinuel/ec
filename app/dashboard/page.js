@@ -19,6 +19,7 @@ import {
     LogOut,
     Landmark
 } from "lucide-react";
+import QuickActions from "@/components/QuickActions";
 
 
 export default async function Dashboard() {
@@ -251,7 +252,7 @@ export default async function Dashboard() {
 
                             </div>
                             {/* <div className="absolute top-[-10%] right-[-5%] w-64 h-64 bg-white rounded-full blur-3xl"></div> */}
-                        {/* </div> */} 
+                        {/* </div> */}
 
                         <div className="
   xl:col-span-2
@@ -267,76 +268,76 @@ export default async function Dashboard() {
   min-h-72
   max-w-full
 ">
-  {/* Top */}
-  <div className="relative z-10">
-    <p className="text-xs sm:text-sm opacity-80 font-semibold uppercase tracking-widest">
-      Current Loan Balance
-    </p>
+                            {/* Top */}
+                            <div className="relative z-10">
+                                <p className="text-xs sm:text-sm opacity-80 font-semibold uppercase tracking-widest">
+                                    Current Loan Balance
+                                </p>
 
-    <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black mt-4 break-all">
-      ₱ {displayBalance.toLocaleString()}
-    </h2>
-  </div>
+                                <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black mt-4 break-all">
+                                    ₱ {displayBalance.toLocaleString()}
+                                </h2>
+                            </div>
 
-  {/* Bottom */}
-  <div className="
+                            {/* Bottom */}
+                            <div className="
     relative z-10
     pt-6
     border-t border-white/20
     flex flex-col gap-6
   ">
-    <div className="
+                                <div className="
       grid grid-cols-1
       sm:grid-cols-2
       lg:grid-cols-4
       gap-6
     ">
-      <div>
-        <p className="text-[10px] opacity-60 uppercase font-bold tracking-widest">
-          Next Payment
-        </p>
-        <p className="text-sm sm:text-md font-bold mt-2">
-          {formattedNextPayment}
-        </p>
-      </div>
+                                    <div>
+                                        <p className="text-[10px] opacity-60 uppercase font-bold tracking-widest">
+                                            Next Payment
+                                        </p>
+                                        <p className="text-sm sm:text-md font-bold mt-2">
+                                            {formattedNextPayment}
+                                        </p>
+                                    </div>
 
-      <div>
-        <p className="text-[10px] opacity-60 uppercase font-bold tracking-widest">
-          Interest Rate
-        </p>
-        <p className="text-base sm:text-lg font-bold">
-          {interestRate}%
-        </p>
-      </div>
+                                    <div>
+                                        <p className="text-[10px] opacity-60 uppercase font-bold tracking-widest">
+                                            Interest Rate
+                                        </p>
+                                        <p className="text-base sm:text-lg font-bold">
+                                            {interestRate}%
+                                        </p>
+                                    </div>
 
-      <div>
-        <p className="text-[10px] opacity-60 uppercase font-bold tracking-widest">
-          Monthly Payment
-        </p>
-        <p className="text-base sm:text-lg font-bold break-all">
-          ₱ {monthlyPayment.toLocaleString()}
-        </p>
-      </div>
+                                    <div>
+                                        <p className="text-[10px] opacity-60 uppercase font-bold tracking-widest">
+                                            Monthly Payment
+                                        </p>
+                                        <p className="text-base sm:text-lg font-bold break-all">
+                                            ₱ {monthlyPayment.toLocaleString()}
+                                        </p>
+                                    </div>
 
-      {bank && (
-        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm text-slate-800">
-          <p className="text-xs text-slate-400 font-bold uppercase">
-            Linked Bank
-          </p>
-          <p className="text-sm font-bold mt-1">
-            {bank.bank}
-          </p>
-          <p className="text-xs text-slate-500">
-            {bank.accountName}
-          </p>
-          <p className="text-xs text-slate-500 break-all">
-            **** {bank.accountNumber.slice(-4)}
-          </p>
-        </div>
-      )}
-    </div>
-  </div>
-</div>
+                                    {bank && (
+                                        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm text-slate-800">
+                                            <p className="text-xs text-slate-400 font-bold uppercase">
+                                                Linked Bank
+                                            </p>
+                                            <p className="text-sm font-bold mt-1">
+                                                {bank.bank}
+                                            </p>
+                                            <p className="text-xs text-slate-500">
+                                                {bank.accountName}
+                                            </p>
+                                            <p className="text-xs text-slate-500 break-all">
+                                                **** {bank.accountNumber.slice(-4)}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
 
 
 
@@ -364,10 +365,7 @@ export default async function Dashboard() {
                     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                         <div className="xl:col-span-1 space-y-4">
                             <h3 className="text-sm font-bold text-slate-800 ml-2">Quick Actions</h3>
-                            <ActionBtn icon={<CreditCard className="text-blue-600" />} label="Make Payment" sub="Pay using Card or Bank" />
-                            {/* <ActionBtn icon={<Landmark className="text-blue-600" />} label="Add Bank" sub="Bank Account Details" /> */}
-                            <BankAction />
-                            <ActionBtn icon={<FileText className="text-blue-600" />} label="Download Statement" sub="Check for better rates" />
+                            <QuickActions />
                         </div>
 
                         <div className="xl:col-span-2 bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-sm">
@@ -420,9 +418,9 @@ function SidebarItem({ icon, label, active = false }) {
     );
 }
 
-function ActionBtn({ icon, label, sub }) {
+function ActionBtn({ icon, label, sub, onClick }) {
     return (
-        <button className="flex items-center gap-4 p-5 bg-white border border-slate-200 rounded-2xl w-full text-left hover:border-blue-300 hover:shadow-md transition-all active:scale-[0.98]">
+        <button onClick={onClick} className="flex items-center gap-4 p-5 bg-white border border-slate-200 rounded-2xl w-full text-left hover:border-blue-300 hover:shadow-md transition-all active:scale-[0.98]">
             <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">{icon}</div>
             <div>
                 <p className="text-sm font-bold text-slate-800">{label}</p>

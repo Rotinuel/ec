@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Autocomplete from "react-google-autocomplete";
 import CurrencyInput from "@/components/CurrencyInput";
 
 export default function Register() {
@@ -14,7 +14,7 @@ export default function Register() {
         name: "",
         email: "",
         password: "",
-        age: "",
+        dateOfBirth: "",
         gender: "",
         workStatus: "",
         workStatusOther: "",
@@ -23,14 +23,31 @@ export default function Register() {
         loanAmountFormatted: "",
         interestRate: 5,
         repaymentMonths: "",
+        address: "",
+        latitude: null,
+        longitude: null,
         idDocument: null,
-
     });
 
     const [loading, setLoading] = useState(false);
 
+    const calculateAge = (dob) => {
+        const [day, month, year] = dob.split("/");
+        const birthDate = new Date(year, month - 1, day);
+        const today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return age;
+    };
+
     const goToStep2 = () => {
-        if (!form.name || !form.email || !form.password || !form.age || !form.gender || !form.workStatus || !form.loanType || !form.loanAmount || !form.loanAmountFormatted || !form.interestRate || !form.repaymentMonths) {
+        if (!form.name || !form.email || !form.password || !form.dateOfBirth || !form.gender || !form.workStatus || !form.loanType || !form.loanAmount || !form.loanAmountFormatted || !form.interestRate || !form.repaymentMonths) {
             toast.error("Please fill all required fields");
             return;
         }
@@ -38,11 +55,16 @@ export default function Register() {
             toast.error("Please specify your work status");
             return;
         }
-        if (form.age < 18) {
-            alert("You must be at least 18 years old to register.");
+        if (!form.dateOfBirth) {
+            toast.error("Date of birth is required");
             return;
         }
 
+        const age = calculateAge(form.dateOfBirth);
+        if (age < 18) {
+            toast.error("You must be at least 18 years old");
+            return;
+        }
         setStep(2)
     }
 
@@ -162,9 +184,8 @@ export default function Register() {
                                     <input
                                         type="date"
                                         placeholder="DD/MM/YYYY"
-                                        pattern="\d{2}/\d{2}/\d{4}"
                                         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm
-                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" value={form.dateOfBirth}
                                         onChange={(e) => {
                                             // Logic to handle the string input
                                             setForm({ ...form, dob: e.target.value });
@@ -188,6 +209,31 @@ export default function Register() {
                                     </select>
                                 </div>
                             </div>
+                            <div>
+  <label className="block text-sm font-medium text-gray-600 mb-1">
+    Residential Address
+  </label>
+
+  <Autocomplete
+    apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+    onPlaceSelected={(place) => {
+      setForm({
+        ...form,
+        address: place.formatted_address,
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng(),
+      });
+    }}
+    options={{
+      types: ["address"],
+      componentRestrictions: { country: "ng" }, // Nigeria
+    }}
+    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm
+      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+    placeholder="Enter your address"
+  />
+</div>
+
 
                             {/* Work Status */}
                             {/* <div>
