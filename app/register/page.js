@@ -31,20 +31,20 @@ export default function Register() {
 
     const [loading, setLoading] = useState(false);
 
-    const calculateAge = (dob) => {
-        const [day, month, year] = dob.split("/");
-        const birthDate = new Date(year, month - 1, day);
-        const today = new Date();
+    // const calculateAge = (dob) => {
+    //     if (!dob) return 0;
+    //     const birthDate = new Date(dob);
+    //     const today = new Date();
 
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
+    //     let age = today.getFullYear() - birthDate.getFullYear();
+    //     const m = today.getMonth() - birthDate.getMonth();
 
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
+    //     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    //         age--;
+    //     }
 
-        return age;
-    };
+    //     return age;
+    // };
 
     const goToStep2 = () => {
         if (!form.name || !form.email || !form.password || !form.dateOfBirth || !form.gender || !form.workStatus || !form.loanType || !form.loanAmount || !form.loanAmountFormatted || !form.interestRate || !form.repaymentMonths) {
@@ -60,11 +60,11 @@ export default function Register() {
             return;
         }
 
-        const age = calculateAge(form.dateOfBirth);
-        if (age < 18) {
-            toast.error("You must be at least 18 years old");
-            return;
-        }
+        // const age = calculateAge(form.dateOfBirth);
+        // if (age < 18) {
+        //     toast.error("You must be at least 18 years old");
+        //     return;
+        // }
         setStep(2)
     }
 
@@ -179,7 +179,7 @@ export default function Register() {
                                 </div> */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-600 mb-1">
-                                        Date of Birth (DD/MM/YYYY)
+                                        Date of Birth
                                     </label>
                                     <input
                                         type="date"
@@ -187,8 +187,16 @@ export default function Register() {
                                         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm
                    focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" value={form.dateOfBirth}
                                         onChange={(e) => {
+                                            let value = e.target.value.replace(/\D/g, "");
+
+                                            if (value.length >= 3) {
+                                                value = value.slice(0, 2) + "/" + value.slice(2);
+                                            }
+                                            if (value.length >= 6) {
+                                                value = value.slice(0, 5) + "/" + value.slice(5, 9);
+                                            }
                                             // Logic to handle the string input
-                                            setForm({ ...form, dob: e.target.value });
+                                            setForm({ ...form, dateOfBirth: e.target.value });
                                         }}
                                     />
                                 </div>
@@ -210,29 +218,29 @@ export default function Register() {
                                 </div>
                             </div>
                             <div>
-  <label className="block text-sm font-medium text-gray-600 mb-1">
-    Residential Address
-  </label>
+                                <label className="block text-sm font-medium text-gray-600 mb-1">
+                                    Residential Address
+                                </label>
 
-  <Autocomplete
-    apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-    onPlaceSelected={(place) => {
-      setForm({
-        ...form,
-        address: place.formatted_address,
-        latitude: place.geometry.location.lat(),
-        longitude: place.geometry.location.lng(),
-      });
-    }}
-    options={{
-      types: ["address"],
-      componentRestrictions: { country: "ng" }, // Nigeria
-    }}
-    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm
+                                <Autocomplete
+                                    apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+                                    onPlaceSelected={(place) => {
+                                        setForm({
+                                            ...form,
+                                            address: place.formatted_address,
+                                            latitude: place.geometry.location.lat(),
+                                            longitude: place.geometry.location.lng(),
+                                        });
+                                    }}
+                                    options={{
+                                        types: ["address"],
+                                        componentRestrictions: { country: "ng" }, // Nigeria
+                                    }}
+                                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm
       focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-    placeholder="Enter your address"
-  />
-</div>
+                                    placeholder="Enter your address"
+                                />
+                            </div>
 
 
                             {/* Work Status */}
